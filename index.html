@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="SOLID Principles" />
+    <meta name="author" content="Jefferson Mariano de Souza" />
+
+    <title>SOLID Principles</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/league.css" />
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+	<style>
+		.highlight {
+			color: #fff171;
+			font-size: 3rem;
+		}
+	</style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-background="img/software-dev.jpg" data-background-transition="zoom" data-background-opacity="0.3">
+          <h2>SOLID Principles</h2>
+          <br />
+          <p>Jefferson Mariano de Souza</p>
+        </section>		
+        <section data-background="img/solid.jpg" data-background-opacity="0.2">
+          <h2>SOLID</h2>
+  		  <p class="fragment">
+			<strong>SOLID</strong> is an acronym that stands for five design principles in object-oriented programming.
+		  </p>
+		  <aside class="notes">
+			<ul>
+			  <li>These principles are intended to make software designs more maintainable</li>
+			  <li>flexible</li>
+			  <li>and easier to understand.</li>
+			</ul>
+		  </aside>		  
+        </section>
+		<section data-background="img/uncle_bob.jpg" data-background-opacity="0.2">
+		  <h2>History</h2>
+		  <p>
+			These principles were first conceived by <a href="https://en.wikipedia.org/wiki/Robert_C._Martin">Robert C. Martin</a> 
+			in his paper Design Principles and Design Patterns, published in 2000.
+		  </p>
+		  <p class="fragment">
+			It was published in his book "Agile Software Development, Principles, Patterns, and Practices", published in 2002.
+		  </p>
+		  <aside class="notes">
+			<ul>
+			  <li>Bob Martin didn't invent it, it was a collection of good practices from different authors</li>
+			  <li>Became more popular in the book Clean Architecture</li>
+			</ul>
+		  </aside>		  
+		</section>
+		<section data-background="img/principles.png" data-background-opacity="0.2">
+		  <p>
+			SOLID principles can be a core philosophy for methodologies
+			<ul>
+				<li>agile development</li>
+				<li>adaptive software development</li>
+			</ul>
+		  </p>
+		  <p class="fragment">
+			These principles provide a base for building software architectures that are:
+		  </p>
+		  <ul>
+			<li class="fragment">Easy to maintain</li>
+			<li class="fragment">Easy to extend</li>
+			<li class="fragment">Easy to understand</li>
+			<li class="fragment">Easy to test</li>
+		  </ul>
+		</section>
+		<section data-background="img/why.png" data-background-opacity="0.2">
+		  <h2>Why SOLID?</h2>
+		  <p>
+			When we write code, we should aim to write code that is easy to maintain and extend over time.
+		  </p>
+		</section>
+		<section data-background="img/solid_principles.webp" data-background-opacity="0.1">
+			<h2>The Principles</h2>
+			<p>
+				There are five SOLID principles:
+			</p>
+			<ul>
+				<li class="fragment"><code class="highlight">S</code>ingle Responsibility Principle</li>
+				<li class="fragment"><code class="highlight">O</code>pen Closed Principle</li>
+				<li class="fragment"><code class="highlight">L</code>iskov Substitution Principle</li>
+				<li class="fragment"><code class="highlight">I</code>nterface Segregation Principle</li>
+				<li class="fragment"><code class="highlight">D</code>ependency Inversion Principle</li>
+			</ul>
+            <aside class="notes">
+				<ul>
+				  <li>these principles weren't in this order on the first release</li>
+				  <li>they were reorganized to form the acronym SOLID later</li>
+				</ul>
+			  </aside>  
+		</section>
+        <section data-markdown data-background="img/srp.webp" data-background-opacity="0.1">
+          ## Single Responsibility Principle
+
+          |Letter|Definition| 
+          |-|-| 
+          |S|A class must have one, and only one reason to change| 
+          
+          Note: 
+          Single Responsibility Principle
+        </section>
+        <section data-background="img/srp.webp" data-background-opacity="0.1">
+          <h2>Single Responsibility Principle</h2>
+          <section>
+            <pre>
+              <code data-line-numbers="3-7|9-10|11-15">
+class Order {
+  public calculateTotalSum(){/*...*/}
+  public getItems(){/*...*/}
+  public getItemCount(){/*...*/}
+  public addItem(item: Item){/*...*/}
+  public deleteItem(itemId: number){/*...*/}
+
+  public printOrder(order: Order){/*...*/}
+  public showOrder(order: Order){/*...*/}
+
+  public load(orderID: number){/*...*/}
+  public save(order: Order){/*...*/}
+  public update(order: Order){/*...*/}
+  public delete(order: Order){/*...*/}
+}
+              </code>
+            </pre>
+            <aside class="notes">
+              <ul>
+                <li>3 different types of tasks</li>
+				<li>Order class is responsible for 3 different types of tasks</li>
+				<li>It lacks cohesion - a class should not assume responsibilities that are not its own</li>
+				<li>High coupling - More responsibilities generate a higher level of dependencies, leaving the system
+				  stiff and fragile for changes</li>
+				<li>Difficulties in implementing automated tests - It is hard to "mock" this type of class</li>
+				<li>It is difficult to reuse the code</li>
+              </ul>
+            </aside>
+          </section>
+          <section data-background="img/srp.webp" data-background-opacity="0.1">
+            <pre>
+              <code data-line-numbers="2-8|10-15|17-20">
+class Order {
+  public calculateTotalSum(){/*...*/}
+  public getItems(){/*...*/}
+  public getItemCount(){/*...*/}
+  public addItem(item: Item){/*...*/}
+  public deleteItem(itemId: number){/*...*/}
+}
+
+class OrderRepository {
+  public load(orderID: number){/*...*/}
+  public save(order: Order){/*...*/}
+  public update(order: Order){/*...*/}
+  public delete(order: Order){/*...*/}
+}
+
+class OrderViewer {
+  public printOrder(order: Order){/*...*/}
+  public showOrder(order: Order){/*...*/}
+}
+              </code>
+            </pre>
+            <aside class="notes">
+              <ul>
+				<li>It doesn't apply only to OOP, it also applies to functional programming</li>
+				<li>Ex: Creation of smaller, clearer and more objective functions</li>
+              </ul>
+            </aside>
+          </section>
+          <section>
+            <img src="img/SOLID_S.jpg" alt="Single Responsibility Principle" />
+          </section>
+        </section>
+        <section data-markdown data-background="img/ocp.png" data-background-opacity="0.2">
+          ## Open-Closed Principle
+          |Letter|Definition| 
+          |-|-| 
+          |O|You should be able to extend a class's behavior, without modifying it| 
+          
+          Note: 
+          Objects or entities should be open for extension, but closed for modification
+        </section>
+        <section data-background="img/ocp.png" data-background-opacity="0.2">
+          <h2>Open-Closed Principle</h2>
+          <section>
+            <pre>
+              <code data-line-numbers="2|6|13-19">
+class FullTimeContract {
+  public salary(): number {/*...*/}
+}
+
+class TraineeContract {
+  public grant(): number {/*...*/}
+}
+
+class Payroll {
+  protected balance: number;
+
+  public calculate(employee: Employee) {
+    if ( employee instanceof FullTimeContract ) {
+      this.balance = employee.salary();
+    } else if ( employee instanceof TraineeContract ) {
+      this.balance = employee.grant();
+    }
+  }
+}
+              </code>
+            </pre>
+            <aside class="notes">
+              <ul>
+				<li>What if we need to calculate the salary of a Contractor employee? If?</li>
+				<li>Objects or entities should be open for extension, but closed for modification</li>
+              </ul>
+            </aside>
+          </section>
+          <section data-background="img/ocp.png" data-background-opacity="0.2">
+			<q>
+				By changing an existing class to add a new behavior, we run a serious risk of introducing bugs into
+				something that was already working.
+			</q>
+          </section>
+          <section data-background="img/ocp.png" data-background-opacity="0.2">
+            <pre>
+              <code data-line-numbers="2-4|6,10|14-20">
+interface Remunerable {
+  public remuneration(): number;
+}
+
+class FullTimeContract implements Remunerable {
+  public remuneration(): number { /*...*/ }
+}
+
+class TraineeContract implements Remunerable {
+  public remuneration(): number { /*...*/ }
+}
+
+class Payroll {
+  protected balance: number;
+  
+  public calculate(employee: Remunerable) {
+    this.balance = employee.remuneration();
+  }
+}                
+              </code>
+            </pre>
+            <aside class="notes">
+              <ul>
+				<li>Define abstraction to favor extension</li>
+				<li>If you add Contractor, you just create one more implementation, does not change the main logic</li>
+				<li>GOF Design Pattern: Strategy</li>
+              </ul>
+            </aside>
+          </section>
+          <section data-background="img/ocp.png" data-background-opacity="0.2">
+            <img src="img/SOLID_O.jpg" alt="Open-Closed Principle" />
+          </section>
+        </section>
+        <section data-markdown data-background="img/lsp.jpeg" data-background-opacity="0.1">
+          ## Liskov Substitution Principle
+
+          |Letter|Definition| 
+          |-|-| 
+          |L|Base classes could be replaceable by their derived classes with no side effects| 
+          
+          Note: 
+          Barbara Liskov
+        </section>
+        <section data-background="img/lsp.jpeg" data-background-opacity="0.1">
+          <h2>Liskov Substitution Principle</h2>
+          <section>
+			<q>
+				Substitutability: If S is a subtype of T, then objects of type T may be replaced with objects of type S (i.e., objects of type
+				S may substitute objects of type T) without altering any of the desirable properties of that program
+				(correctness, task performed, etc.)
+			</q>
+          </section>
+          <section>
+			<q>
+				If for each object o1 of type S there is an object o2 of type T such that for all programs P defined in terms of T, the
+				behavior of P is unchanged when o1 is substituted for o2 then S is a subtype of T
+			</q>
+          </section>
+          <section>
+            <pre>
+              <code data-line-numbers="2-4|6,8|10">
+public class Bird {
+  public fly() {};
+}
+
+public class Duck extends Bird { /*...*/ }
+
+public class Ostrich extends Bird { 
+  public fly() {
+    throw new Error("Ostrich doesn't fly!");
+  };
+}
+              </code>
+            </pre>
+            <aside class="notes">
+              <ul>
+				<li>Polimorphism</li>
+				<li>Ostrich doesn't fly!</li>
+				<li>If we replace Ostrich by Bird, we have a problem</li>
+              </ul>
+            </aside>
+          </section>
+		  <section data-background="img/lsp.jpeg" data-background-opacity="0.1">
+			<img src="img/ostrich.webp" alt="Ostrich" />
+		  </section>
+          <section>
+            <pre>
+              <code data-line-numbers="2|4|8|10">
+public class Bird {/*...*/};
+
+public class FlyingBird extends Bird {
+  public fly(){};
+}
+
+public class Duck extends FlyingBird {}
+
+public class Ostrich extends Bird {
+  //Ostrich doesn't fly!
+}
+              </code>
+            </pre>
+            <aside class="notes">
+              <ul>
+				<li>The solution is to create specific abstractions, to avoid methods without implementation</li>
+              </ul>
+            </aside>
+          </section>
+          <section data-background="img/lsp.jpeg" data-background-opacity="0.1">
+            <img src="img/SOLID_L.jpg" alt="Liskov Substitution Principle" />
+          </section>
+        </section>
+        <section data-markdown data-background="img/isp.jpeg" data-background-opacity="0.1">
+          ## Interface Segregation Principle
+
+          |Letter|Definition| 
+          |-|-| 
+          |I|Many specific interfaces are better than a single interface| 
+          
+          Note: 
+		  * A class should not extend another class just to reuse code
+		  * Use composition instead of inheritance
+		  * A class should not be forced to implement methods that it does not need
+        </section>
+        <section data-background="img/isp.jpeg" data-background-opacity="0.1">
+          <h2>Interface Segregation Principle</h2>
+          <section>
+            <pre>
+              <code data-line-numbers="2-6|8|22|27-29">
+interface Bird {
+  public setLocation(longitude, latitude);
+  public setAltitude(altitude);
+  public render();
+}
+
+class Parrot implements Bird {
+  public setLocation(longitude, latitude) {
+    //Do something
+  }
+    
+  public setAltitude(altitude) {
+    //Do something
+  }
+    
+  public render() {
+    //Do something
+  }
+}
+
+class Penguin implements Bird {
+  public setLocation(longitude, latitude) {
+    //Do something
+  }
+    
+  public setAltitude(altitude) {
+    //Doesn't do anything... Penguins are birds that don't fly!
+  }
+    
+  public render() {
+    //Do something
+  }
+}
+              </code>
+            </pre>
+            <aside class="notes">
+              <ul>
+                <li>A class should not be forced to implement methods that it does not need</li>
+              </ul>
+            </aside>
+          </section>
+          <section>
+            <pre>
+              <code data-line-numbers="2-5|7|11|25-33">
+interface Bird {
+  public setLocation(longitude, latitude);
+  public render();
+}
+
+interface FlyingBird extends Bird {
+  public setAltitude(altitude);
+}
+
+class Parrot implements FlyingBird {
+  public setLocation(longitude, latitude) {
+    //Do something
+  }
+    
+  public setAltitude(altitude) {
+    //Do something
+  }
+    
+  public render() {
+    //Do something
+  }
+}
+
+class Penguin implements Bird {
+  public setLocation(longitude, latitude) {
+    //Do something
+  }
+  
+  public render() {
+    //Do something
+  }
+}
+              </code>
+            </pre>
+            <aside class="notes">
+              <ul>
+				<li>Isolate behaviors</li>
+				<li>Improvement: create <em>Renderable</em> interface</li>
+              </ul>
+            </aside>
+          </section>
+          <section>
+            <img src="img/SOLID_I.jpg" alt="Interface Segregation Principle" />
+          </section>
+        </section>
+        <section data-markdown data-background="img/dip.jpeg" data-background-opacity="0.1">
+          ## Dependency Inversion Principle
+
+          |Letter|Definition| 
+          |-|-| 
+          |D|Depend on abstractions, not on implementations| 
+          
+          Note: 
+          Dependency Inversion Principle
+        </section>
+        <section data-background="img/dip.jpeg" data-background-opacity="0.1">
+          <h2>Dependency Inversion Principle</h2>
+          <section>
+			<q>
+				High-level modules should not depend on low-level modules. Both should depend on abstractions
+			</q>
+			<q>
+				Abstractions should not depend on details. Details should depend on abstractions
+			</q>
+          </section>
+          <section>
+            <pre>
+              <code data-line-numbers="3|6">
+class PasswordReminder {
+  private dbConnection: MySQLConnection;
+    
+  constructor() {       
+    this.dbConnection = new MySQLConnection();           
+  }
+}
+              </code>
+            </pre>
+            <aside class="notes">
+              <ul>
+				<li>The code has a high level of coupling: it depends on MySQLConnection</li>
+				<li>Terms confusion:</li>
+				<li>Dependency Inversion is a principle (Concept)</li>
+				<li>Dependency Injection is a Design Pattern</li>
+				<li>What if we want to use Oracle? Do I have to change everything?</li>
+              </ul>
+            </aside>
+          </section>
+          <section>
+            <pre>
+              <code data-line-numbers="2-4|6|12|18-24">
+interface Connection {
+  public connect() {}
+}
+
+class MySQLConnection implements Connection {
+  public connect() {
+    // ...
+  }
+}
+
+class OracleConnection implements Connection {
+  public connect() {
+    // ...
+  }
+}
+
+class PasswordReminder {
+  private dbConnection: Connection;
+    
+  constructor(Connection dbConnection) {       
+    this.dbConnection = dbConnection;           
+  }
+}
+              </code>
+            </pre>
+            <aside class="notes">
+              <ul>
+				<li>Now we have a low level of coupling: it depends on an abstraction</li>
+				<li>By declaring that the dependency is received from outside, we don't have implicit dependency</li>
+				<li>It makes testing easier</li>
+              </ul>
+            </aside>
+          </section>
+          <section>
+            <img src="img/SOLID_D.jpg" alt="Dependency Inversion Principle" />
+          </section>
+        </section>
+		<section data-background="img/question.jpg" data-background-opacity="0.4">
+		  <h2>Questions?</h2>
+		</section>
+        <section data-background="img/alignment.jpg" data-background-opacity="0.3">
+          <h1>Thanks</h1>
+          <p>
+            Presentation available at
+            <a href="https://studiojms.github.io/solid-presentation/"
+              >https://studiojms.github.io/solid-presentation/</a
+            >
+          </p>
+        </section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/search/search.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        center: true,
+        hash: true,
+        transition: 'concave', // none/fade/slide/convex/concave/zoom
+        backgroundTransition: 'zoom',
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight],
+      });
+    </script>
+  </body>
+</html>
